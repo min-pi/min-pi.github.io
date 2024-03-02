@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo world" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="我第一次接触冯诺依曼结构大概是在学《计算机组成原理》这门课的时候，当时老师在讲解计算机硬件组成时，直接就提到了现代计算机基本结构形式是冯诺依曼结构，先说明了它的先进性，例如：第一次采用二进制作为数制基础、提出了存储程序和程序控制的概念等等，并且对其五大组成部件进行了简要分析。后续这门课的讲解也主要围绕这五大部分进行。此后的很长一段时间里，我对冯诺依曼结构的理解止步于课本，没有更深入的了解。直到昨天">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈冯诺依曼结构">
+<meta property="og:url" content="http://example.com/2024/03/02/Von-Neumann-architecture/index.html">
+<meta property="og:site_name" content="PIPI&#39;s blog">
+<meta property="og:description" content="我第一次接触冯诺依曼结构大概是在学《计算机组成原理》这门课的时候，当时老师在讲解计算机硬件组成时，直接就提到了现代计算机基本结构形式是冯诺依曼结构，先说明了它的先进性，例如：第一次采用二进制作为数制基础、提出了存储程序和程序控制的概念等等，并且对其五大组成部件进行了简要分析。后续这门课的讲解也主要围绕这五大部分进行。此后的很长一段时间里，我对冯诺依曼结构的理解止步于课本，没有更深入的了解。直到昨天">
+<meta property="og:locale">
+<meta property="og:image" content="http://example.com/images/Von-Neumann-architecture/1550297242205042819.jpg">
+<meta property="og:image" content="http://example.com/images/Von-Neumann-architecture/1550297242397082537.jpg">
+<meta property="article:published_time" content="2024-03-02T14:22:37.084Z">
+<meta property="article:modified_time" content="2024-03-02T14:23:17.859Z">
+<meta property="article:author" content="PIPI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Von-Neumann-architecture/1550297242205042819.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'pipi'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/2024/03/02/Von-Neumann-architecture/"/>
+
+
+
+
+
+  <title>浅谈冯诺依曼结构 | PIPI's blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">PIPI's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/03/02/Von-Neumann-architecture/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PIPI">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PIPI's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">浅谈冯诺依曼结构</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-03-02T22:22:37+08:00">
+                2024-03-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-eye"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>我第一次接触冯诺依曼结构大概是在学《计算机组成原理》这门课的时候，当时老师在讲解计算机硬件组成时，直接就提到了现代计算机基本结构形式是冯诺依曼结构，先说明了它的先进性，例如：第一次采用二进制作为数制基础、提出了存储程序和程序控制的概念等等，并且对其五大组成部件进行了简要分析。后续这门课的讲解也主要围绕这五大部分进行。此后的很长一段时间里，我对冯诺依曼结构的理解止步于课本，没有更深入的了解。直到昨天，我脑袋里突然闪过两个问题：“在冯诺依曼结构提出之前的计算机都是什么样的？”，“冯诺依曼结构的先进性体现在什么地方？”。今天这篇博客将从这两个问题入手，认真分析冯诺依曼结构的前世今生。</p>
+<h3 id="早期的计算设备"><a href="#早期的计算设备" class="headerlink" title="早期的计算设备"></a>早期的计算设备</h3><p>关于“现代计算机”概念的提出，最早要追溯到1834年。在英国有个发明家叫做查尔斯·巴贝奇，他在1822年用<strong>机械装置</strong>完成了第一台用于数字计算的差分机，运算精度达到了小数点后六位。后来他继续潜心研究，在1834年提出了更为先进的“分析机”概念，在分析机的设计中，就已经有了现代计算机的基本结构。可惜因为当时的制作工艺水平不够，分析机的设计没有最终成型。</p>
+<img src="/images/Von-Neumann-architecture/1550297242205042819.jpg" alt="差分机复原图" style="zoom:50%;" />
+
+
+
+
+
+<h3 id="第一台电子计算机"><a href="#第一台电子计算机" class="headerlink" title="第一台电子计算机"></a>第一台电子计算机</h3><p>1937年，实体计算机有了更新的发展，美国的约翰·温森特·阿塔纳索夫教授和克里夫特·贝瑞设计了一台用于求解线性方程组的计算机，以设计者的名字命名，叫做阿塔纳索夫-贝瑞计算机（Atanasoff–Berry Computer），简称ABC机，于1942年成功进行了测试。这是世界上<strong>第一台电子计算机</strong>。</p>
+<img src="/images/Von-Neumann-architecture/1550297242397082537.jpg" alt="冷门知识：最早的计算机长什么样，究竟是谁发明了第一台计算机？" style="zoom: 67%;" />
+
+<p>其主要特点如下：</p>
+<ul>
+<li>采用电能与电子元件，在当时就是电子真空管</li>
+<li>采用二进制位， 而非当时常用的十进制位</li>
+<li>使用电容作为存储器，可再生</li>
+<li><strong>不可编程，仅用于求解线性方程组</strong><ul>
+<li>正因如此， ABC机只能称为第一台电子计算机，而不能称为第一台通用计算机</li>
+<li>细心的家人可能已经发现，ABC机于1937年出现，远早于ENIAC的1946年。但是人们都倾向于将ENIAC认为是第一台现代意义上的计算机。我认为大概率是因为ABC机不够通用吧。</li>
+<li>但不可否认的是，ENIAC以及后续的EDVAC在ABC机上借鉴了很多东西，例如：基于二进制运算、可重复使用的内存、逻辑电路等等。</li>
+</ul>
+</li>
+</ul>
+<h3 id="第一台通用计算机"><a href="#第一台通用计算机" class="headerlink" title="第一台通用计算机"></a>第一台通用计算机</h3><p>随着二战爆发，大批科学家开始被召集起来做军事科技研发（战争推动科技进步的典型例子）。1942年，为了进行弹道研究，能够更快更准确的得到计算结果，以莫西利和埃克特为首的研制小组，在军方的支持下开始研发可以<strong>重复编程</strong>并且适用于多种场景的通用计算机。经过四年研发时间，终于在1946年2月14日年正式诞生，这台计算机被命名为ENIAC计算机。</p>
+<p>这台机器相信大家都很熟悉了，它作为<strong>世界上第一台通用计算机</strong>，是一台图灵完全的电子计算机，能够重复编程、解决各种计算问题。<strong>能够编程</strong>是ENIAC与ABC机相比最大的进步，但需要注意的是：此编程非彼编程。现在我们眼里的编程可能是敲敲键盘、鼠标点一点，最后一键编译执行。但在当时，ENIAC必须通过使用跳线接线进行编程。在编程时，程序的特定逻辑必须要直接连接到机器中。这意味着程序员需要通过人工移动插板上的电缆并更改控制输入响应的开关来执行编程。然后，ENIAC 在解决完这个特定的问题后，在执行另一个问题时还需要更改程序，再次手动连接机器的数据路径。这是一个相当费力的过程，需要几天时间进行必要的物理更改，此外，设计和编写新程序还需要数周时间。</p>
+<p>小结一下，ENIAC虽然实现了可重复编程，但是它的程序还是体现在电路连接上的（数据则体现在纸带上），通用但费力。</p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h3 id="冯诺依曼结构"><a href="#冯诺依曼结构" class="headerlink" title="冯诺依曼结构"></a>冯诺依曼结构</h3><p>扯了这么久，终于聊到冯诺依曼结构了。我们先看看这个结构是什么时间，在哪里提出来的：</p>
+<blockquote>
+<p>“1945年，曾参与过ENIAC研发的冯·诺依曼和他的研发小组在经过一系列的讨论后，发表了一个全新的带有存储装置的计算机设计方案——EDVAC。”</p>
+<p>“冯·诺伊曼结构这个词出自美籍犹太数学家约翰·冯·诺伊曼（John von Neumann）的论文：《EDVAC报告书的第一份草案》”</p>
+</blockquote>
+<p>也就是说，冯诺依曼在研制ENIAC的过程中，意识到了这种结构的不足，并提出了自己的改进思路，应用到了EDVAC中。因此，深入了解ENIAC的优缺点对于理解冯诺依曼结构的先进性有着巨大的帮助。</p>
+<p>提到冯诺依曼结构，想必各位家人的脑袋里会不由自主的浮现出两个知识点<strong>“计算机五大组成部分”</strong>和<strong>“存储程序”</strong>。没错，这正是它最最最大的亮点。那什么是<strong>存储程序</strong>呢？即事先将编写好的程序和原始数据送入主存后再执行程序，一旦程序被启动执行，计算机能在不需要操作人员干预下自动完成逐条指令取出和执行的任务。为了达到这个目标，冯诺依曼改变了程序的表现形式，由之前的门电路组合变为了一段指令，控制器和运算器根据每条指令进行相对应的操作，实现与固化在门电路中的程序相同的功能。这就使得程序员只需要更改内存中存放的程序，无需更改硬件电路连接，即可改变计算机执行逻辑，解决不一样的问题。与ENIAC相比，简直不要太方便。理解到这里，<strong>计算机五大组成部分</strong>的概念就水到渠成啦，其中，存储器顾名思义就是存储程序和数据的部件，指导了计算机的执行逻辑；控制器和运算器解析代码，执行相应的逻辑运算，实现和<strong>代码相对应的固化的电路</strong>一样的功能；输入设备和输出设备则提供了人们与机器交互的渠道。</p>
+<p>最后，我们再总结一下冯诺依曼结构的特点：</p>
+<ul>
+<li>提出了计算机的5大组成部件</li>
+<li>存储程序的概念</li>
+<li>以运算器为核心的结构</li>
+<li>指令与数据同等地位存放在存储器中</li>
+<li>指令与数据都以二进制表示</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/02/28/how-to-make-blog-wedsite/" rel="next" title="2024年，如何使用 github pages + Hexo + Next 搭建个人博客">
+                <i class="fa fa-chevron-left"></i> 2024年，如何使用 github pages + Hexo + Next 搭建个人博客
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="PIPI" />
+            
+              <p class="site-author-name" itemprop="name">PIPI</p>
+              <p class="site-description motion-element" itemprop="description">记录一些重要的技术点，方便自己查阅，也希望能够帮助到大家。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A9%E6%9C%9F%E7%9A%84%E8%AE%A1%E7%AE%97%E8%AE%BE%E5%A4%87"><span class="nav-number">1.</span> <span class="nav-text">早期的计算设备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E5%8F%B0%E7%94%B5%E5%AD%90%E8%AE%A1%E7%AE%97%E6%9C%BA"><span class="nav-number">2.</span> <span class="nav-text">第一台电子计算机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E5%8F%B0%E9%80%9A%E7%94%A8%E8%AE%A1%E7%AE%97%E6%9C%BA"><span class="nav-number">3.</span> <span class="nav-text">第一台通用计算机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E7%BB%93%E6%9E%84"><span class="nav-number">5.</span> <span class="nav-text">冯诺依曼结构</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PIPI</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
